@@ -6,7 +6,6 @@ import './App.css';
 import { ImageCropFeedback } from './components/ImageCropFeedback';
 
 var height = 0, width = 0, imgSrc = 'https://placekitten.com/600/600'
-var x1 = 0, x2 = 0, y1 = 0, y2 = 0
 var dataURL = ''
 var crop = false
 
@@ -37,11 +36,6 @@ function App() {
     setBottomVal(bottom)
 
     setClickCount(clickCount + 1)
-
-    if (process.env.NODE_ENV != 'production') {
-      console.log('Function callback working')
-      console.log('top: ' + ' ' + topVal + ' left: ' + leftVal + ' right: ' + rightVal + ' bottom: ' + bottomVal)
-    }
   }
 
   const tmpCanvasHandler = () => {
@@ -68,11 +62,6 @@ function App() {
       t_img.src = dataURL
 
       crop = false
-
-      if (process.env.NODE_ENV != 'production') {
-        console.log('==== Temporary Canvas ====')
-        console.log('DataURL: ' + dataURL)
-      }
     }
     ctx.restore()
   }
@@ -84,25 +73,12 @@ function App() {
 
       setClickOne([e.offsetX, e.offsetY])
       setClickCount(clickCount + 1)
-
-      if (process.env.NODE_ENV != 'production') {
-        console.log('==== clickOne Update() =====')
-        console.log('clickCount: ' + clickCount + 'clickOne: ' + clickOne + 'clickTwo: ' + clickTwo)
-      }
     } 
     
     if (clickCount === 2) {
 
       setClickTwo([e.offsetX, e.offsetY])
       setClickCount(0)
-
-      if (process.env.NODE_ENV != 'production') {
-        console.log('==== clickTwo Update() =====')
-        console.log('clickCount: ' + clickCount + 'clickOne: ' + clickOne + 'clickTwo: ' + clickTwo)
-        // console.log('Coordinates hooks: ' + clickTwo)
-        // console.log('Dimensions: ' + 'height: ' + height + ' width: ' + width)
-        // console.log('Single Coordinates: ' + clickTwo[1] + ' ' + clickTwo[0])
-      }
     }
   };
 
@@ -124,11 +100,6 @@ function App() {
       setBottomVal(width)
 
       crop = true
-    }
-
-    if (process.env.NODE_ENV != 'production') {
-      console.log('==== useEffect() =====')
-      console.log('clickCount: ' + clickCount + 'clickOne: ' + clickOne + 'clickTwo: ' + clickTwo)
     }
   }, [clickTwo])
 

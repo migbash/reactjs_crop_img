@@ -23,33 +23,14 @@ interface ImageCropFeedbackProps {
 
 export const ImageCropFeedback: React.FC<ImageCropFeedbackProps> = ({ imageUrl, top, left, right, bottom, onAreaSelect }) => {
 
-    // ~~~~~~~~~~~~~~~~
-    // Using HooksAPI
-
-    const [topVal, setTopVal] = useState(top)
-    const [leftVal, setLeftVal] = useState(left)
-    const [rightVal, setRightVal] = useState(right)
-    const [bottomVal, setBottomVal] = useState(bottom)
-
-    // ~~~~~~~~~~~~~~~~~
-    // Function Component Methods
-
-    // onAreaSelect = (top, left, right, bottom):void => {
-    //     // UPDATE THE DIMNESIONS OF THE RECTANGLE UPON DOUBLE CLICK
-    //     setTopVal(top)
-    //     setLeftVal(left)
-    //     setRightVal(right)
-    //     setBottomVal(bottom)
-    // }
-
     // ~~~~~~~~~~~~~~~~~~
     // useEffect()
 
     useEffect(() => {
 
-        var c : any = document.getElementById("canvas_t"); // LOcate the canvas on the component
+        var c : any = document.getElementById("canvas_t");
 
-        var img = new Image(); // Instantiating the image object
+        var img = new Image();
 
         img.src = imageUrl
         img.crossOrigin = '*';
@@ -63,25 +44,13 @@ export const ImageCropFeedback: React.FC<ImageCropFeedbackProps> = ({ imageUrl, 
             c.width = img.width;
             c.height = img.height;
 
-            // var rect = c.getBoundingClientRect();
-
-            // var x = top - rect.top;   // x top left coordinate
-            // var y = left - rect.left; // y top left coordinate  
-
-            ctx.drawImage(img, 0, 0); // image draw on canvas
+            // image draw on canvas
+            ctx.drawImage(img, 0, 0);
 
             // rectangle draw
             ctx.beginPath();
             ctx.rect(top, left, bottom, right); // x, y coordinate of the top left corner + width & height dimensions
             ctx.stroke();
-
-            if (process.env.NODE_ENV != 'production') {
-                // console.log('Redrawing')
-                // console.log('Values passed: ' + top + ' ' + left + ' ' + ' ' + right + ' ' + bottom)
-                // console.log('Crop value: ' + crop)
-                // console.log('rect-left: ' + rect.left + 'rect-top: ' + rect.top)
-                // console.log('x-value: ' + x + ' y-value: ' + y)
-            }
         }
     })
 
