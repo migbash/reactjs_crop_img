@@ -1,7 +1,5 @@
-import React, { Component, useEffect, useLayoutEffect, useMemo, useState } from 'react';
-import { render } from 'react-dom';
+import React, { useEffect, useState } from 'react';
 
-import logo from './logo.svg';
 import './App.css';
 import { ImageCropFeedback } from './components/ImageCropFeedback';
 
@@ -11,31 +9,25 @@ var crop = false
 
 function App() {
 
+  console.log('Component Re-render')
+
   // ~~~~~~~~~~~~~~~~
   // Using React Hooks as State for the component
 
-  const [topVal, setTopVal] = useState(100)
-  const [leftVal, setLeftVal] = useState(100)
-  const [rightVal, setRightVal] = useState(100)
-  const [bottomVal, setBottomVal] = useState(100)
-
+  const [dimension, setDimension] = useState([100, 100, 100, 100])
   const [clickCount, setClickCount] = useState(0)
-
   const [clickOne, setClickOne] = useState([0])
   const [clickTwo, setClickTwo] = useState([0])
+
+  console.log(dimension)
 
   // ~~~~~~~~~~~~~~~~
   // Component Functions
 
   const newAreaSelect = (top: number, left: number, right: number, bottom: number) => {
-
     // RESET THE VALUES OF THE RECTANLGE TO (0, 0, 0, 0)
-    setTopVal(top)
-    setLeftVal(left)
-    setRightVal(right)
-    setBottomVal(bottom)
-
-    setClickCount(clickCount + 1)
+    setDimension([top, left, right, bottom])
+    setClickCount(1)
   }
 
   const tmpCanvasHandler = () => {
@@ -53,8 +45,7 @@ function App() {
       canvas.width = img.width;
       canvas.height = img.height;
 
-      // draw the image on the canvas
-      ctx.drawImage(img, topVal, leftVal, bottomVal, rightVal, 0, 0, 200, 200);
+      ctx.drawImage(img, dimension[0], dimension[1], dimension[3], dimension[2], 0, 0, 250, 250);  // draw the image on the canvas
 
       // update the image src:
       var t_img:HTMLImageElement|any = document.getElementById('target_img')
@@ -66,49 +57,33 @@ function App() {
     ctx.restore()
   }
 
-  // FUNCTION CLICK COMPONENT CLICK EVENT
+  // FUNCTION CLICK COMPONENT CLICK EVENT (1st & 2nd Clicks)
   onclick = function(e) {
-
     if (clickCount === 1) {
-
       setClickOne([e.offsetX, e.offsetY])
       setClickCount(clickCount + 1)
     } 
     
     if (clickCount === 2) {
-
       setClickTwo([e.offsetX, e.offsetY])
       setClickCount(0)
     }
   };
 
-  // ~~~~~~~~~~~~~~~
-  // useEffect()
-  
+  // USE-EFFECT [2nd Click Trigger]
   useEffect(() => {
-    // onChange of the clickCounter, do:
-
     // prevent intial render execution, wait for intial clicks
-    if (clickCount != 0) {
-
+    if (clickCount !== 0) {
       width = clickTwo[0] - clickOne[0]
       height = clickTwo[1] - clickOne[1]
-
-      setTopVal(clickOne[0])
-      setLeftVal(clickOne[1])
-      setRightVal(height)
-      setBottomVal(width)
-
-      crop = true
+      setDimension([clickOne[0], clickOne[1], height, width])
+      crop = true // Notify of updated rectangle crop
     }
   }, [clickTwo])
 
+  // USE-EFFECT [Crop Rect-Upadate]
   useEffect(() => {
     if(crop) {
-      setTopVal(clickOne[0])
-      setLeftVal(clickOne[1])
-      setRightVal(height)
-      setBottomVal(width)
       tmpCanvasHandler()
     }
   }, [crop])
@@ -117,10 +92,10 @@ function App() {
   
   return (
     <div className="App">
-      <ImageCropFeedback imageUrl={imgSrc} top={topVal} left={leftVal} right={rightVal} bottom={bottomVal} onAreaSelect={newAreaSelect} />
+      <ImageCropFeedback imageUrl={imgSrc} top={dimension[0]} left={dimension[1]} right={dimension[2]} bottom={dimension[3]} onAreaSelect={newAreaSelect} />
       <canvas id='canvas_tmp'> </canvas>
       <p> Result: </p>
-      <img src={dataURL} id='target_img'></img>
+      <img alt='cropped_img' src={dataURL} id='target_img'></img>
     </div>
   );
 }

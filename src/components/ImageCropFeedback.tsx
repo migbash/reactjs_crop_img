@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
 // ~~~~~~~~~~~~~~
 // Component Interface
@@ -23,15 +23,12 @@ interface ImageCropFeedbackProps {
 
 export const ImageCropFeedback: React.FC<ImageCropFeedbackProps> = ({ imageUrl, top, left, right, bottom, onAreaSelect }) => {
 
-    // ~~~~~~~~~~~~~~~~~~
-    // useEffect()
-
+    // USE-EFFECT [2nd Click Trigger]
     useEffect(() => {
 
         var c : any = document.getElementById("canvas_t");
 
         var img = new Image();
-
         img.src = imageUrl
         img.crossOrigin = '*';
         img.onload = function() {
@@ -44,8 +41,7 @@ export const ImageCropFeedback: React.FC<ImageCropFeedbackProps> = ({ imageUrl, 
             c.width = img.width;
             c.height = img.height;
 
-            // image draw on canvas
-            ctx.drawImage(img, 0, 0);
+            ctx.drawImage(img, 0, 0); // image draw on canvas
 
             // rectangle draw
             ctx.beginPath();
@@ -55,7 +51,6 @@ export const ImageCropFeedback: React.FC<ImageCropFeedbackProps> = ({ imageUrl, 
     })
 
     // ~~~~~~~~~~~~~~~~~~
-    // Return HTML
 
     return (
         <div>  
